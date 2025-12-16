@@ -1,127 +1,210 @@
-# Real-time Pair Trading Dashboard
+# 📊 Real-Time Quantitative Analytics Dashboard
 
-A real-time pair trading dashboard that connects to Binance WebSocket API to fetch live trade data for BTCUSDT and ETHUSDT, analyzes the statistical spread between them, and visualizes it in real-time.
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
+![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-red)
+![Binance](https://img.shields.io/badge/Data-Binance_WebSocket-yellow)
+![Status](https://img.shields.io/badge/Status-Active-success)
 
-## Features
+---
 
-- **Real-time Data Ingestion**: Connects to Binance WebSocket API to fetch live trade data
-- **Statistical Analysis**: Calculates hedge ratio using OLS regression, spread, and z-score
-- **Interactive Dashboard**: Beautiful Streamlit interface with real-time charts
-- **Entry/Exit Signals**: Visual alerts when z-score exceeds user-defined thresholds
-- **Data Export**: Download processed data as CSV
+## 📖 Project Overview
 
-git clone [https://github.com/Yash-Coder-07/Quant_Developer_Assignment-.git](https://github.com/Yash-Coder-07/Quant_Developer_Assignment-.git)
+This project is a complete **end-to-end quantitative trading analytics dashboard** developed for the **Quant Developer Evaluation Assignment**.
 
-cd Quant_Developer_Assignment-
+It implements a **Statistical Arbitrage (Pairs Trading)** strategy on the **BTCUSDT / ETHUSDT** pair. The system ingests real-time tick data from Binance, stores it in a thread-safe local database, calculates cointegration metrics (Hedge Ratio, Z-Score, ADF Test) on-the-fly, and visualizes trading signals in a reactive **Streamlit dashboard**.
 
-# Create virtual environment (Recommended)
+---
+
+## 🏗️ Architecture & Design
+
+The system follows a **producer–consumer architecture** to ensure the UI remains responsive while processing high-frequency data.
+
+```mermaid
+graph TD
+    subgraph "Data Ingestion (Backend)"
+        WS[Binance WebSocket] -->|Async Stream| Ingestion[websocket_ingestion.py]
+        Ingestion -->|Batch Write| DB[(SQLite DB / WAL Mode)]
+    end
+
+    subgraph "Analytics Engine"
+        DB -->|Fetch Ticks| Processing[analytics/data_processing.py]
+        Processing -->|Resample 1m| Math[analytics/calculations.py]
+        Math -->|Compute| Metrics[Z-Score, Spread, OLS]
+    end
+
+    subgraph "Presentation (Frontend)"
+        Metrics -->|Visualize| UI[Streamlit Dashboard]
+        User[Trader] -->|Config Params| UI
+    end
+````
+
+### 🔑 Key Design Decisions
+
+* **Asynchronous Ingestion**
+  Uses `asyncio` and `aiohttp` to handle high-throughput WebSocket streams without blocking.
+
+* **Thread-Safe Storage**
+  SQLite is configured in **WAL (Write-Ahead Logging)** mode to allow concurrent writes (ingestion) and reads (dashboard).
+
+* **Modular Analytics**
+  Mathematical logic is isolated in `analytics/calculations.py`, making it testable and reusable independent of the UI.
+
+* **Cold Start Handling**
+  The dashboard displays a *System Warming Up* state until sufficient historical bars (≈20–30 minutes) are collected.
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1️⃣ Prerequisites
+
+* Python **3.8+**
+* Git
+
+### 2️⃣ Installation
+
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/Yash-Coder-07/Quantative_Developer.git
+cd Quantative_Developer
+
+# Create virtual environment (recommended)
 python -m venv venv
-# Windows:
+
+# Windows
 venv\Scripts\activate
-# Mac/Linux:
+
+# macOS / Linux
 source venv/bin/activate
 
-# Install requirements
+# Install dependencies
 pip install -r requirements.txt
+```
 
-## Usage
+---
 
-### Start the Dashboard
+## 🚀 How to Run
 
-Run the main script to start both the WebSocket ingestion and Streamlit dashboard:
+### ✅ Method 1: Unified Launcher (Recommended)
+
+Automatically runs both the ingestion service and the Streamlit dashboard.
 
 ```bash
 python run.py
 ```
 
-This will:
-- Start a background thread that connects to Binance WebSocket and stores trade data in SQLite
-- Launch the Streamlit dashboard in your default web browser
+---
 
-The dashboard will be available at `http://localhost:8501`
+### 🧪 Method 2: Manual Execution (Debug Mode)
 
-### Dashboard Controls
+Run backend and frontend in separate terminals.
 
-- **Window Size**: Adjust the time window (in minutes) for analysis (5-240 minutes)
-- **Z-Score Threshold**: Set the threshold for entry/exit signals (0.5-5.0)
-- **Auto Refresh**: Enable/disable automatic data refresh
-- **Refresh Interval**: Set how often the dashboard refreshes (1-10 seconds)
+**Terminal 1 — Data Ingestion**
 
-### Charts
-
-1. **Normalized Price Overlay**: Shows normalized prices of both assets with the hedge ratio applied
-2. **Z-Score Chart**: Displays the z-score over time with threshold lines for entry/exit signals
-
-### Signals
-
-- **SELL Signal**: Triggered when z-score exceeds the upper threshold (positive)
-- **BUY Signal**: Triggered when z-score exceeds the lower threshold (negative)
-
-## Project Structure
-
-```
-Quant-Dashboard/
-├── requirements.txt          # Python dependencies
-├── database.py               # SQLite database module
-├── websocket_ingestion.py    # Binance WebSocket ingestion
-├── analytics.py              # Analytics engine (OLS, spread, z-score)
-├── dashboard.py              # Streamlit dashboard
-├── run.py                    # Main entry point
-├── README.md                 # This file
-└── trades.db                 # SQLite database (created automatically)
+```bash
+python websocket_ingestion.py
 ```
 
-## Technical Details
+**Terminal 2 — Dashboard**
 
-### Database Schema
+```bash
+streamlit run dashboard.py
+```
 
-The SQLite database stores trade ticks with the following schema:
-- `id`: Primary key
-- `timestamp`: Unix timestamp (seconds)
-- `symbol`: Trading pair symbol (e.g., BTCUSDT)
-- `price`: Trade price
-- `quantity`: Trade quantity
+> ⚠️ **First Run Note**
+> On initial startup, the database is empty. The dashboard will display **“System Warming Up”** for the first 2–3 minutes while sufficient 1-minute candles are accumulated.
 
-### Analytics
+---
 
-1. **Hedge Ratio**: Calculated using OLS regression on normalized prices
-2. **Spread**: `spread = price_a_norm - hedge_ratio * price_b_norm`
-3. **Z-Score**: `zscore = (spread - mean) / std`
+## 🧮 Quantitative Methodology
 
-### Data Flow
+The strategy is based on **mean reversion** between two cointegrated assets.
 
-1. WebSocket ingestion continuously receives trade events from Binance
-2. Trades are stored in SQLite database
-3. Analytics engine reads recent data and calculates metrics
-4. Streamlit dashboard displays real-time visualizations
+---
 
-## Requirements
+### 1️⃣ Hedge Ratio (β)
 
-- Python 3.8+
-- Internet connection (for Binance WebSocket)
-- All dependencies listed in `requirements.txt`
+Calculated dynamically using **Rolling OLS (Ordinary Least Squares)** regression:
 
-## Notes
+[
+P_A = \alpha + \beta P_B + \epsilon
+]
 
-- The WebSocket ingestion runs in a background thread and doesn't block the Streamlit interface
-- Data is automatically cleaned up (keeps last 24 hours by default)
-- The dashboard requires at least 2 minutes of data to calculate meaningful statistics
+---
 
-## Troubleshooting
+### 2️⃣ Spread
 
-**No data showing:**
-- Wait a few minutes for WebSocket data to accumulate
-- Check your internet connection
-- Verify Binance WebSocket is accessible
+Represents deviation from equilibrium:
 
-**Charts not updating:**
-- Enable "Auto Refresh" in the sidebar
-- Adjust the refresh interval
-- Check that the WebSocket ingestion is running
+[
+\text{Spread}*t = P*{A,t} - \beta P_{B,t}
+]
 
-## License
+---
 
-This project is for educational purposes.
+### 3️⃣ Z-Score (Trading Signal)
+
+Normalizes the spread across volatility regimes:
+
+[
+Z_t = \frac{\text{Spread}*t - \mu*{\text{spread}}}{\sigma_{\text{spread}}}
+]
+
+**Signal Logic**
+
+* 📈 **Buy:** Z < -2.0 → Spread undervalued
+* 📉 **Sell:** Z > 2.0 → Spread overvalued
+
+---
+
+### 4️⃣ Stationarity Test (ADF)
+
+An **Augmented Dickey-Fuller (ADF)** test is applied to the spread series.
+
+* **p-value < 0.05** ⇒ Stationary & tradable pair
+
+---
+
+## 📂 Project Structure
+
+```text
+QUANTATIVE_DEVELOPER/
+├── analytics/                  # Core Math & Data Logic
+│   ├── calculations.py         # OLS, Z-Score, ADF implementation
+│   ├── core.py                 # Analytics orchestrator
+│   └── data_processing.py      # Tick → OHLC resampling
+├── charts/                     # Plotly visualization modules
+│   ├── analysis.py             # Z-Score & Spread charts
+│   └── trading.py              # Price overlays & volume
+├── components/                 # UI widgets
+│   ├── metrics.py              # KPI cards
+│   └── sidebar.py              # User controls
+├── dashboard.py                # Streamlit entry point
+├── database.py                 # SQLite wrapper (thread-safe)
+├── run.py                      # Unified application launcher
+├── websocket_ingestion.py      # Async Binance WebSocket client
+├── requirements.txt            # Project dependencies
+└── README.md                   # Documentation
+```
+
+---
+
+## 🤖 AI Usage Transparency
+
+In compliance with the assignment guidelines, generative AI tools (ChatGPT, Cursor) were used **only** for:
+
+1. **Project scaffolding** (initial directory structure).
+2. **Async WebSocket logic assistance** (reconnection handling).
+3. **Plotly visualization configuration** (dual Y-axis charts).
+
+All **quantitative logic, architecture design, and implementation decisions** were independently developed and validated.
+
+---
+
+### 📈 Designed for Quantitative Developer Evaluation
+
+
 
 
 
