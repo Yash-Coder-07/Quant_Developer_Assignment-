@@ -37,43 +37,7 @@ graph TD
         User[Trader] -->|Config Params| UI
     end
 ````
-graph TD
-    %% Define styles
-    classDef external fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
-    classDef backend fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
-    classDef storage fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
-    classDef frontend fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
 
-    subgraph "External Data Source"
-        Binance["Binance WebSocket API"]:::external
-    end
-
-    subgraph "Backend Producer"
-        Ingestion["websocket_ingestion.py - Asyncio Aiohttp"]:::backend
-        Buffer["Internal Memory Buffer - 1 Second Batch"]:::backend
-        Binance -->|Real time Ticks| Ingestion
-        Ingestion -->|Accumulate| Buffer
-    end
-
-    subgraph "Persistence Layer"
-        DB["SQLite Database - trades.db"]:::storage
-        WAL_Note["WAL Mode Enabled - Non Blocking Read Write"]:::storage
-        Buffer -->|"Batch Write 1s"| DB
-        DB -.- WAL_Note
-    end
-
-    subgraph "Frontend Consumer"
-        Dashboard["dashboard.py - Streamlit Main Loop"]:::frontend
-        Processor["data_processing.py - Dynamic Resampling"]:::frontend
-        QuantEngine["calculations.py - OLS ZScore ADF"]:::frontend
-
-        DB -->|Poll Recent Ticks| Dashboard
-        Dashboard -->|Pass Ticks| Processor
-        Processor -->|"Generate OHLC Bars"| QuantEngine
-        QuantEngine -->|Return Signals and Metrics| Dashboard
-    end
-    
-    Trader((User)) -->|Interact and View| Dashboard
 ### 🔑 Key Design Decisions
 
 * **Asynchronous Ingestion**
@@ -240,6 +204,7 @@ All **quantitative logic, architecture design, and implementation decisions** we
 ---
 
 ### 📈 Designed for Quantitative Developer Evaluation
+
 
 
 
