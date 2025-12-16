@@ -38,6 +38,50 @@ graph TD
     end
 ````
 
+## 🏗️ Architecture & Design
+
+The system follows a **producer–consumer architecture** to ensure the UI remains responsive.
+
+```mermaid
+graph TD
+    %% Define professional styles for the diagram
+    classDef external fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef backend fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+    classDef storage fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    classDef frontend fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+
+    subgraph "External Data Source"
+        Binance[Binance WebSocket API]:::external
+    end
+
+    subgraph "Backend: Data Ingestion (Producer)"
+        Ingestion[websocket_ingestion.py<br/>(Asyncio/Aiohttp)]:::backend
+        Buffer[Internal Memory Buffer<br/>(1-Second Batch)]:::backend
+        Binance -->|Real-time Ticks (wss://)| Ingestion
+        Ingestion -->|Accumulate| Buffer
+    end
+
+    subgraph "Persistence Layer"
+        DB[(SQLite Database<br/>trades.db)]:::storage
+        WAL_Note[<b>WAL Mode Enabled</b><br/>Non-Blocking Read/Write]:::storage
+        Buffer -->|Batch Write (1s)| DB
+        DB -.- WAL_Note
+    end
+
+    subgraph "Frontend: Analytics & UI (Consumer)"
+        Dashboard[dashboard.py<br/>(Streamlit Main Loop)]:::frontend
+        Processor[analytics/data_processing.py<br/>(Dynamic Resampling)]:::frontend
+        QuantEngine[analytics/calculations.py<br/>(OLS, Z-Score, ADF)]:::frontend
+
+        DB -->|Poll Recent Ticks| Dashboard
+        Dashboard -->|Pass Ticks| Processor
+        Processor -->|Generate OHLC Bars (1s/1m/5m)| QuantEngine
+        QuantEngine -->|Return Signals & Metrics| Dashboard
+    end
+    
+    Trader((User)) -->|Interact & View| Dashboard
+```
+
 ### 🔑 Key Design Decisions
 
 * **Asynchronous Ingestion**
@@ -204,6 +248,7 @@ All **quantitative logic, architecture design, and implementation decisions** we
 ---
 
 ### 📈 Designed for Quantitative Developer Evaluation
+
 
 
 
