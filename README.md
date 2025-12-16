@@ -173,7 +173,7 @@ QUANTATIVE_DEVELOPER/
 
 ---
 
-## 🤖 AI Usage Transparency
+##  AI Usage Transparency
 
 In compliance with the assignment guidelines, generative AI tools (ChatGPT, Cursor) were used **only** for:
 
@@ -181,11 +181,10 @@ In compliance with the assignment guidelines, generative AI tools (ChatGPT, Curs
 2. **Async WebSocket logic assistance** (reconnection handling).
 3. **Plotly visualization configuration** (dual Y-axis charts).
 
-All **quantitative logic, architecture design, and implementation decisions** were independently developed and validated.
-
 ---
 
 ### 📈 Designed for Quantitative Developer Evaluation
+
 
 
 
