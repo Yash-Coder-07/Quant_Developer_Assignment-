@@ -127,19 +127,20 @@ The strategy is based on **mean reversion** between two cointegrated assets.
 
 Calculated dynamically using **Rolling OLS (Ordinary Least Squares)** regression:
 
-[
+$$
 P_A = \alpha + \beta P_B + \epsilon
-]
+$$
 
 ---
 
 ### 2️⃣ Spread
 
-Represents deviation from equilibrium:
+Represents deviation from the equilibrium relationship between the two assets:
 
-[
-\text{Spread}*t = P*{A,t} - \beta P_{B,t}
-]
+$$
+\text{Spread}_t = P_{A,t} - \beta P_{B,t}
+$$
+
 
 ---
 
@@ -203,6 +204,7 @@ All **quantitative logic, architecture design, and implementation decisions** we
 ---
 
 ### 📈 Designed for Quantitative Developer Evaluation
+
 
 
 
