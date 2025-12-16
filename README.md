@@ -146,16 +146,16 @@ $$
 
 ### 3️⃣ Z-Score (Trading Signal)
 
-Normalizes the spread across volatility regimes:
+Normalizes the spread across different volatility regimes:
 
-[
-Z_t = \frac{\text{Spread}*t - \mu*{\text{spread}}}{\sigma_{\text{spread}}}
-]
+$$
+Z_t = \frac{\text{Spread}_t - \mu_{\text{spread}}}{\sigma_{\text{spread}}}
+$$
 
 **Signal Logic**
 
-* 📈 **Buy:** Z < -2.0 → Spread undervalued
-* 📉 **Sell:** Z > 2.0 → Spread overvalued
+- 📈 **Buy:** \( Z < -2.0 \) → Spread undervalued  
+- 📉 **Sell:** \( Z > 2.0 \) → Spread overvalued
 
 ---
 
