@@ -11,6 +11,7 @@ A real-time pair trading dashboard that connects to Binance WebSocket API to fet
 - **Data Export**: Download processed data as CSV
 
 git clone [https://github.com/Yash-Coder-07/Quant_Developer_Assignment-.git](https://github.com/Yash-Coder-07/Quant_Developer_Assignment-.git)
+
 cd Quant_Developer_Assignment-
 
 # Create virtual environment (Recommended)
@@ -121,5 +122,6 @@ The SQLite database stores trade ticks with the following schema:
 ## License
 
 This project is for educational purposes.
+
 
 
