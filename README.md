@@ -17,25 +17,6 @@ It implements a **Statistical Arbitrage (Pairs Trading)** strategy on the **BTCU
 
 ## 🏗️ Architecture & Design
 
-The system follows a **producer–consumer architecture** to ensure the UI remains responsive while processing high-frequency data.
-
-```mermaid
-graph TD
-    subgraph "Data Ingestion (Backend)"
-        WS[Binance WebSocket] -->|Async Stream| Ingestion[websocket_ingestion.py]
-        Ingestion -->|Batch Write| DB[(SQLite DB / WAL Mode)]
-    end
-
-    subgraph "Analytics Engine"
-        DB -->|Fetch Ticks| Processing[analytics/data_processing.py]
-        Processing -->|Resample 1m| Math[analytics/calculations.py]
-        Math -->|Compute| Metrics[Z-Score, Spread, OLS]
-    end
-
-    subgraph "Presentation (Frontend)"
-        Metrics -->|Visualize| UI[Streamlit Dashboard]
-        User[Trader] -->|Config Params| UI
-    end
 ````
 <img width="1736" height="364" alt="image" src="https://github.com/user-attachments/assets/7805582e-961e-41b8-84c2-5b6308e47065" />
 
@@ -205,6 +186,7 @@ All **quantitative logic, architecture design, and implementation decisions** we
 ---
 
 ### 📈 Designed for Quantitative Developer Evaluation
+
 
 
 
