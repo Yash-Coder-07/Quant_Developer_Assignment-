@@ -17,8 +17,6 @@ It implements a **Statistical Arbitrage (Pairs Trading)** strategy on the **BTCU
 
 ## 🏗️ Architecture & Design
 
-<img width="1736" height="364" alt="image" src="https://github.com/user-attachments/assets/7805582e-961e-41b8-84c2-5b6308e47065" />
-
 <img width="1899" height="314" alt="image" src="https://github.com/user-attachments/assets/c19efc8b-af4b-4d61-b1cf-00d805095e26" />
 
 
@@ -188,6 +186,7 @@ All **quantitative logic, architecture design, and implementation decisions** we
 ---
 
 ### 📈 Designed for Quantitative Developer Evaluation
+
 
 
 
