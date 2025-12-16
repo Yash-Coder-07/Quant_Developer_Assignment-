@@ -10,17 +10,18 @@ A real-time pair trading dashboard that connects to Binance WebSocket API to fet
 - **Entry/Exit Signals**: Visual alerts when z-score exceeds user-defined thresholds
 - **Data Export**: Download processed data as CSV
 
-## Installation
+git clone [https://github.com/Yash-Coder-07/Quant_Developer_Assignment-.git](https://github.com/Yash-Coder-07/Quant_Developer_Assignment-.git)
+cd Quant_Developer_Assignment-
 
-1. **Clone or navigate to the project directory:**
-   ```bash
-   cd Quant-Dashboard
-   ```
+# Create virtual environment (Recommended)
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
 
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Install requirements
+pip install -r requirements.txt
 
 ## Usage
 
@@ -120,4 +121,5 @@ The SQLite database stores trade ticks with the following schema:
 ## License
 
 This project is for educational purposes.
+
 
