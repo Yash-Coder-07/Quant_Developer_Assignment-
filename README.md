@@ -175,6 +175,7 @@ QUANTATIVE_DEVELOPER/
 -  📈 **Buy Signal Triggred (For demonstration z-score threshold value adjusted):**
 <img width="1919" height="811" alt="Screenshot 2025-12-17 011143" src="https://github.com/user-attachments/assets/4da5ea86-f9ba-41af-a7a7-5e984ac7ca91" />
 
+
 - 📉 **Sell Signal Triggred (For demonstration z-score threshold value adjusted):**
 <img width="1872" height="848" alt="Screenshot 2025-12-17 004314" src="https://github.com/user-attachments/assets/4b49512a-5e52-48f6-9e23-1eb72d4488c5" />
 
@@ -190,6 +191,7 @@ In compliance with the assignment guidelines, generative AI tools (ChatGPT, Curs
 ---
 
 ### 📈 Designed for Quantitative Developer Evaluation
+
 
 
 
