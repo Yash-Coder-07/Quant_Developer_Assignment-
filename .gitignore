@@ -1,0 +1,45 @@
+# Python Junk (Compiled files)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment (Do not upload 1000s of library files)
+env/
+venv/
+ENV/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Database (Do not upload your large local data)
+*.db
+*.sqlite
+*.sqlite3
+trades.db
+
+# Security (NEVER upload these)
+.env
+.env.local
+
+# IDE Settings (Optional, keeps repo clean)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Junk
+.DS_Store
+Thumbs.db
+
+# Streamlit
+
+.streamlit/secrets.toml
