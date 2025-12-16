@@ -1,0 +1,6 @@
+[theme]
+base="dark"
+backgroundColor="#0E1117"        # Main Background
+secondaryBackgroundColor="#161B22" # Sidebar
+textColor="#E6EDF3"              # Primary Text
+primaryColor="#00E5FF"           # Accent (Cyan)
