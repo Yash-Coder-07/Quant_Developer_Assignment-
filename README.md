@@ -66,8 +66,8 @@ graph TD
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/Yash-Coder-07/Quantative_Developer.git
-cd Quantative_Developer
+git clone https://github.com/Yash-Coder-07/Quant_Developer_Assignment-.git
+cd Quant_Developer_Assignment-
 
 # Create virtual environment (recommended)
 python -m venv venv
@@ -204,6 +204,7 @@ All **quantitative logic, architecture design, and implementation decisions** we
 ---
 
 ### 📈 Designed for Quantitative Developer Evaluation
+
 
 
 
